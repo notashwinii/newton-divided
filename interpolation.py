@@ -1,6 +1,7 @@
-import numpy as np
 import tkinter as tk
 from tkinter import ttk, messagebox
+import numpy as np
+
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
@@ -74,51 +75,84 @@ class InterpolationGUI:
         self.window.title("Newton's Divided Difference Interpolation")
         self.interpolator = NewtonInterpolation()
         
-        # Create input frame
+       # Configure grid weights for proper spacing
+        self.window.grid_rowconfigure(0, weight=0)  # Title row
+        self.window.grid_rowconfigure(1, weight=1)  # Content row
+        self.window.grid_columnconfigure(0, weight=1)
+        self.window.grid_columnconfigure(1, weight=1)
+        
+        # Add title label at the top
+        title_label = ttk.Label(
+            self.window, 
+            text="Newton's Divided Difference Interpolation",
+            font=('Helvetica', 16, 'bold')
+        )
+        title_label.grid(row=0, column=0, columnspan=2, pady=20)
+        
+        # Create input frame (left side)
         input_frame = ttk.LabelFrame(self.window, text="Input Data")
-        input_frame.grid(row=0, column=0, padx=10, pady=5, sticky="nsew")
+        input_frame.grid(row=1, column=0, padx=10, pady=5, sticky="nsew")
         
-        # X coordinate entry
-        ttk.Label(input_frame, text="X coordinate:").grid(row=0, column=0, padx=5, pady=5)
-        self.x_entry = ttk.Entry(input_frame)
-        self.x_entry.grid(row=0, column=1, padx=5, pady=5)
+        # Configure input frame grid
+        input_frame.grid_columnconfigure(1, weight=1)  # Make the second column (entry field column) expandable
         
-        # Y coordinate entry
-        ttk.Label(input_frame, text="Y coordinate:").grid(row=1, column=0, padx=5, pady=5)
-        self.y_entry = ttk.Entry(input_frame)
-        self.y_entry.grid(row=1, column=1, padx=5, pady=5)
+        # Create a sub-frame for coordinate inputs
+        coord_frame = ttk.Frame(input_frame)
+        coord_frame.grid(row=0, column=0, columnspan=2, padx=5, pady=5, sticky="ew")
+        coord_frame.grid_columnconfigure(1, weight=1)  # Make entry column expandable
         
-        # Add point button
-        ttk.Button(input_frame, text="Add Point", command=self.add_point).grid(row=2, column=0, columnspan=2, pady=5)
+        # X coordinate input with more space
+        ttk.Label(coord_frame, text="X coordinate:", width=12).grid(row=0, column=0, padx=(5,2), pady=5)
+        self.x_entry = ttk.Entry(coord_frame)
+        self.x_entry.grid(row=0, column=1, padx=(2,5), pady=5, sticky="ew")
         
-        # Points display
-        self.points_text = tk.Text(input_frame, height=5, width=30)
-        self.points_text.grid(row=3, column=0, columnspan=2, padx=5, pady=5)
+        # Y coordinate input with more space
+        ttk.Label(coord_frame, text="Y coordinate:", width=12).grid(row=1, column=0, padx=(5,2), pady=5)
+        self.y_entry = ttk.Entry(coord_frame)
+        self.y_entry.grid(row=1, column=1, padx=(2,5), pady=5, sticky="ew")
+        
+        # Add point button - centered and proper width
+        add_button = ttk.Button(input_frame, text="Add Point", command=self.add_point)
+        add_button.grid(row=1, column=0, columnspan=2, pady=10, padx=5, sticky="ew")
+        
+        # Points display text area - expand to frame width
+        self.points_text = tk.Text(input_frame, height=10, width=30)
+        self.points_text.grid(row=2, column=0, columnspan=2, padx=5, pady=5, sticky="nsew")
         
         # Interpolation frame
         interp_frame = ttk.LabelFrame(self.window, text="Interpolation")
-        interp_frame.grid(row=1, column=0, padx=10, pady=5, sticky="nsew")
+        interp_frame.grid(row=2, column=0, padx=10, pady=5, sticky="nsew")
+        interp_frame.grid_columnconfigure(1, weight=1)  # Make entry column expandable
         
-        # Interpolation point entry
-        ttk.Label(interp_frame, text="Interpolate at x:").grid(row=0, column=0, padx=5, pady=5)
+        # Interpolation point input
+        ttk.Label(interp_frame, text="Interpolate at x:", width=12).grid(row=0, column=0, padx=(5,2), pady=5)
         self.interp_entry = ttk.Entry(interp_frame)
-        self.interp_entry.grid(row=0, column=1, padx=5, pady=5)
+        self.interp_entry.grid(row=0, column=1, padx=(2,5), pady=5, sticky="ew")
         
-        # Calculate button
-        ttk.Button(interp_frame, text="Calculate", command=self.calculate_interpolation).grid(row=1, column=0, columnspan=2, pady=5)
+        # Calculate button - expand to frame width
+        calc_button = ttk.Button(interp_frame, text="Calculate", command=self.calculate_interpolation)
+        calc_button.grid(row=1, column=0, columnspan=2, pady=10, padx=5, sticky="ew")
         
-        # Result display
+        # Result display label
         self.result_label = ttk.Label(interp_frame, text="Result: ")
         self.result_label.grid(row=2, column=0, columnspan=2, pady=5)
         
-        # Initialize lists for storing points
+        # Initialize point storage
         self.x_points = []
         self.y_points = []
         
-        # Create figure for plotting
+        # Create matplotlib figure and canvas (right side)
         self.fig, self.ax = plt.subplots(figsize=(6, 4))
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.window)
-        self.canvas.get_tk_widget().grid(row=0, column=1, rowspan=2, padx=10, pady=5)
+        self.canvas.get_tk_widget().grid(row=1, column=1, rowspan=2, padx=10, pady=5, sticky="nsew")
+        
+        # Configure plot
+        self.ax.set_title("Interpolation Plot")
+        self.ax.grid(True)
+        self.ax.set_xlabel('x')
+        self.ax.set_ylabel('y')
+        self.canvas.draw()
+
         
     def add_point(self):
         """Add a new point to the interpolation data."""
