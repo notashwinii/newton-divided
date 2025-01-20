@@ -91,38 +91,38 @@ class InterpolationGUI:
         
         # Create input frame (left side)
         input_frame = ttk.LabelFrame(self.window, text="Input Data")
-        input_frame.grid(row=1, column=0, padx=10, pady=5, sticky="nsew")
+        input_frame.grid(row=1, column=0, padx=5, pady=2, sticky="nsew")
         
         # Configure input frame grid
-        input_frame.grid_columnconfigure(1, weight=1)  # Make the second column (entry field column) expandable
+        input_frame.grid_columnconfigure(1, weight=1) 
         
         # Create a sub-frame for coordinate inputs
         coord_frame = ttk.Frame(input_frame)
         coord_frame.grid(row=0, column=0, columnspan=2, padx=5, pady=5, sticky="ew")
-        coord_frame.grid_columnconfigure(1, weight=1)  # Make entry column expandable
+        coord_frame.grid_columnconfigure(1, weight=1)  
         
-        # X coordinate input with more space
+        # X coordinate input 
         ttk.Label(coord_frame, text="X coordinate:", width=12).grid(row=0, column=0, padx=(5,2), pady=5)
         self.x_entry = ttk.Entry(coord_frame)
         self.x_entry.grid(row=0, column=1, padx=(2,5), pady=5, sticky="ew")
         
-        # Y coordinate input with more space
+        # Y coordinate input 
         ttk.Label(coord_frame, text="Y coordinate:", width=12).grid(row=1, column=0, padx=(5,2), pady=5)
         self.y_entry = ttk.Entry(coord_frame)
         self.y_entry.grid(row=1, column=1, padx=(2,5), pady=5, sticky="ew")
         
-        # Add point button - centered and proper width
+        # Add point button 
         add_button = ttk.Button(input_frame, text="Add Point", command=self.add_point)
         add_button.grid(row=1, column=0, columnspan=2, pady=10, padx=5, sticky="ew")
         
-        # Points display text area - expand to frame width
+        # Points display text area 
         self.points_text = tk.Text(input_frame, height=10, width=30)
         self.points_text.grid(row=2, column=0, columnspan=2, padx=5, pady=5, sticky="nsew")
         
         # Interpolation frame
         interp_frame = ttk.LabelFrame(self.window, text="Interpolation")
-        interp_frame.grid(row=2, column=0, padx=10, pady=5, sticky="nsew")
-        interp_frame.grid_columnconfigure(1, weight=1)  # Make entry column expandable
+        interp_frame.grid(row=2, column=0, padx=5, pady=2, sticky="nsew")
+        interp_frame.grid_columnconfigure(1, weight=1)  
         
         # Interpolation point input
         ttk.Label(interp_frame, text="Interpolate at x:", width=12).grid(row=0, column=0, padx=(5,2), pady=5)
